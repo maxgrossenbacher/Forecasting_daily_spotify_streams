@@ -41,5 +41,7 @@ df1.rename(columns={'  "acousticness"':"acousticness",'  "analysis_url"':"analys
                     '  "liveness"': "liveness",'  "loudness"': "loudness", '  "mode"': "mode", '  "speechiness"': "speechiness", \
                     '  "tempo"': "tempo",'  "time_signature"': "time_signature", '  "track_href"': "track_href", '  "type"': "type", \
                     '  "uri"': "uri",'  "valence"': "valence", '{\n  "danceability"': "dancability"}, inplace=True)
+df1['id']=df1.id.str.strip("\"")
 # join dfs on song id
-spotify_df = df.join(df1, on='id', lsuffix='track', rsuffix='audio_features')
+spotify_df = df.merge(df1, on='id', how='left', suffixes=['_track', '_af'], sort=False, indicator=True)
+spotify_df.to_pickle('spotify_audio_features.pkl')
