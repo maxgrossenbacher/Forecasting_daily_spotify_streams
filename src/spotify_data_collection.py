@@ -6,7 +6,7 @@ from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.model_selection import train_test_split
 
 # reading in data
-df = pd.read_csv('data.csv')
+df = pd.read_csv('../data/data.csv')
 df.dropna(axis=0, inplace=True)
 # creating song id column
 df[['https', 'none', 'spotify', 'track','id']] =  df['URL'].str.split('/', expand=True)
