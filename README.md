@@ -5,13 +5,13 @@
 * [Getting Audio Features](https://github.com/maxgrossenbacher/kaggle_spotify/blob/master/src/spotify_data_collection.py) - script for using Spotify API to get audio features of song on Spotify  
 
 ## EDA Plots
-The United States has the most avg daily streams on Spotify.
+The United States has the most average daily streams on Spotify.
 ![alt_text](images/Avg_Streams_per_Region.png)
 We can see that number of daily streams are lowest on Sundays and grow gradually throughout the week, peaking on Fridays.
 ![alt_text](images/Avg_Streaming_Jan_2017.png)
 ![alt_text](images/Avg_Streaming_Day_of_Week.png)
 
-The total number of plays for the number one song on Spotify each line is colored based on each song.  
+The total number of plays for the number one song on Spotify each day. Line is colored based track name.  
 ![alt_text](images/Global_%231_Song_Streams_January_to_September_2017.png)
 
 ## Conclusions & Future Directions
