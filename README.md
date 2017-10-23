@@ -11,7 +11,7 @@ We can see that number of daily streams are lowest on Sundays and grow gradually
 ![alt_text](images/Avg_Streaming_Jan_2017.png)
 ![alt_text](images/Avg_Streaming_Day_of_Week.png)
 
-The total number of plays for the number one song on Spotify each day. Line is colored based track name.  
+The total number of plays for the number one song on Spotify each day. Line is colored based on track name.  
 ![alt_text](images/Global_%231_Song_Streams_January_to_September_2017.png)
 
 ## Conclusions & Future Directions
