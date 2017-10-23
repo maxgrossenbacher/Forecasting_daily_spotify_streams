@@ -11,4 +11,4 @@
 * Numpy
 * Matplotlib
 * Statsmodels
-* Times Series
+* TimeSeries - ARIMA
