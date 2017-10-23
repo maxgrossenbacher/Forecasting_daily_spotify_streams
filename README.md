@@ -10,6 +10,7 @@ We can see that ARIMA models are able to capture the weekly trends in number of 
 ![alt_text](images/Avg_Streaming_Day_of_Week.png)
 
 However, the ARIMA models not very good at forecasting monthly trends of daily number of Spotify streams. Since, this data is only for an 8 month period, the ARIMA models are having a tough time forecasting the monthly underlying signal. A longer period of data would allow the ARIMA models to better capture this signal.  
+![alt_text](images/ARIMA_model_to_Predict_Average_Number_of_Streams.png)
 
 Some future directions for this project would be to try LSTM neural net to improve the forecasting number of daily streams on Spotify.
 
