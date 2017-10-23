@@ -6,8 +6,8 @@
 
 ## Conclusions & Future Directions
 We can see that ARIMA models are able to capture the weekly trends in number of daily Spotify streams. We can see that number of daily streams are lowest on Sundays and grow gradually throughout the week, peaking on Fridays.
-![alt_text](../images/Avg_Streaming_Jan_2017.png)
-![alt_text](../images/Avg_Streaming_Day_of_Week.png)
+![alt_text](images/Avg_Streaming_Jan_2017.png)
+![alt_text](images/Avg_Streaming_Day_of_Week.png)
 
 However, the ARIMA models not very good at forecasting monthly trends of daily number of Spotify streams. Since, this data is only for an 8 month period, the ARIMA models are having a tough time forecasting the monthly underlying signal. A longer period of data would allow the ARIMA models to better capture this signal.  
 
