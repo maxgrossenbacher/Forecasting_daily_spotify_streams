@@ -70,7 +70,7 @@ class Collector(threading.Thread):
         if os.path.exists(file_path):
             print ("File '%s' already exists, skipping" % file_path)
 
-        with open(file_path, 'wb', 1) as out_csv_file:
+        with open(file_path, 'w', 1) as out_csv_file:
             writer = csv.writer(out_csv_file)
             writer.writerow(headers)
 
@@ -90,7 +90,7 @@ class Collector(threading.Thread):
 if __name__ == "__main__":
 
     one_day = timedelta(days=1)
-    start_date = date(2017, 1, 1)
+    start_date = date(2014, 1, 1)
     end_date = datetime.now().date() - (2 * one_day)
 
     regions = ["global", "us", "gb", "ad", "ar", "at", "au", "be", "bg",
