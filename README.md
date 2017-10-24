@@ -26,7 +26,7 @@ Some future directions for this project would be to try LSTM neural net to impro
 ## Tech Stack
 * Jupyter Notebook
 * Pandas
-* Numpy
+* NumPy
 * Matplotlib
 * Statsmodels
 * TimeSeries - ARIMA
