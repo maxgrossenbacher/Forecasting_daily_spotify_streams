@@ -3,12 +3,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from statsmodels.tsa.stattools import adfuller
 from statsmodels.tsa.arima_model import ARIMA, ARIMAResults
-from spotify_data_crawler import Collector
-import os
-from datetime import datetime, timedelta, date
-import csv
-import threading
-import requests
 plt.style.use('ggplot')
 
 
@@ -106,17 +100,8 @@ def transforming_predictions(col_log, ARIMA_predictions):
     return predictions_ARIMA
 
 if __name__ == '__main__':
-    DATA_DIRECTORY = 'data'
-    one_day = timedelta(days=1)
-    start_date = date(2017, 1, 1)
-    end_date = datetime.now().date() - (2 * one_day)
 
-    regions = ["global", "us"]
-
-    for region in regions:
-        collector = Collector(region, start_date, end_date)
-        collector.start()
-
+    print('loading data...')
     spotify_df = pd.read_csv('data/global.csv', infer_datetime_format=True, parse_dates=['Date'])
     spotify_df['day_of_week'] = spotify_df['Date'].dt.dayofweek
     spotify_df['day'] = spotify_df['day_of_week'].map({0:'Monday',1:'Tuesday',\
@@ -124,3 +109,13 @@ if __name__ == '__main__':
                                                      4:'Friday',5:'Saturday',6:'Sunday'})
     top_songs_df = get_top_songs(spotify_df)
     plot_1_song(top_songs_df, 'Global Streams of #1 Song', col='Streams')
+
+    print('loading data...')
+    us_df = pd.read_csv('data/us.csv', infer_datetime_format=True, parse_dates=['Date'])
+    us_df['day_of_week'] = us_df['Date'].dt.dayofweek
+    us_df['day'] = us_df['day_of_week'].map({0:'Monday',1:'Tuesday',\
+                                                     2:'Wednesday',3:'Thursday',\
+                                                     4:'Friday',5:'Saturday',6:'Sunday'})
+    top_us_songs_df = get_top_songs(us_df)
+    plot_1_song(top_us_songs_df, 'US Streams of #1 Song', col='Streams')
+    plt.show()
