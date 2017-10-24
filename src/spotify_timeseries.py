@@ -2,22 +2,33 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from statsmodels.tsa.stattools import adfuller
+from statsmodels.tsa.seasonal import seasonal_decompose
 from statsmodels.tsa.arima_model import ARIMA, ARIMAResults
+from sklearn.metrics import mean_squared_error
 plt.style.use('ggplot')
 
 
-def bigger_fonts(ax):
+def bigger_fonts(ax, fsize=17):
+    '''
+    Function for making font sizes on figures bigger
+    '''
     for item in ([ax.title, ax.xaxis.label, ax.yaxis.label] +
                  ax.get_xticklabels() + ax.get_yticklabels()):
-        item.set_fontsize(20)
+        item.set_fontsize(fsize)
 
 def get_top_songs(df):
+    '''
+    Function for returning #1 ranked songs on Spotify (total number streams)
+    '''
     top_o_charts = df[df['Position'] == 1]
     songs_that_topped = set((top_o_charts['Track Name'].tolist()))
     region_charts = top_o_charts[['Date','Region','Streams','Artist','Track Name', 'day_of_week','day']].reset_index()
     return region_charts
 
 def plot_1_song(df, title, col):
+    '''
+    Function for ploting #streams per track. Each track is its own unique color
+    '''
     fig, ax = plt.subplots(1)
     for track in set(df['Track Name'].tolist()):
         df[df['Track Name'] == track].plot(ax=ax, x='Date', \
@@ -28,9 +39,10 @@ def plot_1_song(df, title, col):
         plt.legend(set(df['Track Name'].tolist()))
         bigger_fonts(ax)
 
+def make_timeseries(df):
+    return df.set_index('Date')
 
 def test_stationarity(timeseries, std=True):
-
     #Determing rolling statistics
     rolmean = pd.rolling_mean(timeseries, window=7)
     rolstd = pd.rolling_std(timeseries, window=7)
@@ -46,10 +58,10 @@ def test_stationarity(timeseries, std=True):
     plt.ylabel('Log Avg # Streams')
     plt.legend(loc='best')
     plt.title('Rolling Mean & Standard Deviation')
-    bigger_fonts(ax)
+    bigger_fonts(ax, 15)
 
     print ('Results of Dickey-Fuller Test:')
-    dftest = adfuller(timeseries, autolag='AIC')
+    dftest = adfuller(timeseries.iloc[:,0].values, autolag='AIC')
     dfoutput = pd.Series(dftest[0:4], index=['Test Statistic','p-value','#Lags Used','Number of Observations Used'])
     for key,value in dftest[4].items():
         dfoutput['Critical Value (%s)'%key] = value
@@ -57,7 +69,6 @@ def test_stationarity(timeseries, std=True):
     return rolmean
 
 def seasonal_decomp(ts):
-    from statsmodels.tsa.seasonal import seasonal_decompose
     decomposition = seasonal_decompose(x=ts, freq=12)
 
     trend = decomposition.trend
@@ -87,14 +98,14 @@ def seasonal_decomp(ts):
     return residual
 
 
-def ARIMA_model(df, p, q):
-    model = ARIMA(df, order=(p, 1, q))
+def ARIMA_model(df, p, d, q):
+    model = ARIMA(df, order=(p, d, q))
     results_ARIMA = model.fit(disp=0)
     predictions_ARIMA = results_ARIMA.predict()
     return model, predictions_ARIMA
 
-def transforming_predictions(col_log, ARIMA_predictions):
-    predictions_ARIMA_log = pd.Series(col_log.iloc[0], index=col_log.index)
+def transforming_predictions(ts_log, ARIMA_predictions):
+    predictions_ARIMA_log = pd.Series(float(ts_log.iloc[0]), index=ARIMA_predictions.index)
     predictions_ARIMA_log = predictions_ARIMA_log.add(ARIMA_predictions.cumsum(),fill_value=0)
     predictions_ARIMA = np.exp(predictions_ARIMA_log)
     return predictions_ARIMA
@@ -102,13 +113,15 @@ def transforming_predictions(col_log, ARIMA_predictions):
 if __name__ == '__main__':
 
     print('loading data...')
-    spotify_df = pd.read_csv('data/global.csv', infer_datetime_format=True, parse_dates=['Date'])
-    spotify_df['day_of_week'] = spotify_df['Date'].dt.dayofweek
-    spotify_df['day'] = spotify_df['day_of_week'].map({0:'Monday',1:'Tuesday',\
+    global_df = pd.read_csv('data/global.csv', infer_datetime_format=True, parse_dates=['Date'])
+    global_df['day_of_week'] = global_df['Date'].dt.dayofweek
+    global_df['day'] = global_df['day_of_week'].map({0:'Monday',1:'Tuesday',\
                                                      2:'Wednesday',3:'Thursday',\
                                                      4:'Friday',5:'Saturday',6:'Sunday'})
-    top_songs_df = get_top_songs(spotify_df)
-    plot_1_song(top_songs_df, 'Global Streams of #1 Song', col='Streams')
+    # get top song Global and # streams
+    top_songs_global_df = get_top_songs(global_df)
+    # plot number one song Global and # streams
+    plot_1_song(top_songs_global_df, 'Global Streams of #1 Song', col='Streams')
 
     print('loading data...')
     us_df = pd.read_csv('data/us.csv', infer_datetime_format=True, parse_dates=['Date'])
@@ -116,6 +129,31 @@ if __name__ == '__main__':
     us_df['day'] = us_df['day_of_week'].map({0:'Monday',1:'Tuesday',\
                                                      2:'Wednesday',3:'Thursday',\
                                                      4:'Friday',5:'Saturday',6:'Sunday'})
+    # get top song US and # streams
     top_us_songs_df = get_top_songs(us_df)
+    # plot number one song US and # streams
     plot_1_song(top_us_songs_df, 'US Streams of #1 Song', col='Streams')
+    plt.show()
+
+    # creating ARIMA model
+    total_streams = global_df.groupby('Date').sum()["Streams"].reset_index()
+    global_ts = make_timeseries(total_streams)
+    global_ts_log = np.log(global_ts)
+    rol_mean = test_stationarity(global_ts_log, std=False)
+    plt.show()
+
+    model, global_predictions_ARIMA = ARIMA_model(global_ts_log, 2, 1, 4)
+    trans_preds_ARIMA = transforming_predictions(global_ts_log, global_predictions_ARIMA)
+    trans_preds_ARIMA.dropna(inplace=True)
+
+    fig, ax = plt.subplots(1)
+    ax.plot(global_ts, label='Total Streams')
+    ax.plot(trans_preds_ARIMA , label='ARIMA prediction')
+    plt.title('ARIMA model to Predict Average Number of Streams RMSE = {}' .format(np.sqrt(mean_squared_error(global_ts[1:], trans_preds_ARIMA))))
+    plt.xlabel('Date')
+    plt.ylabel('Total # Streams')
+    plt.legend(loc='best')
+    bigger_fonts(ax, 15)
+    fig.set_size_inches((20,10))
+    print('RMSE: {}'.format(np.sqrt(mean_squared_error(global_ts[1:], trans_preds_ARIMA))))
     plt.show()
