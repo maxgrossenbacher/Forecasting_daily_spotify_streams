@@ -1,7 +1,7 @@
 # Forecasting Number of Spotify Streams using Time Series
 
 ## Code
-* [EDA Notebook](https://github.com/maxgrossenbacher/kaggle_spotify/blob/master/src/Spotify_Time_Series.ipynb) - In this notebook, I forecast the avg. number of streams and the number of streams for the #1 song on Spotify using ARIMA models.
+* [EDA and Forecasting Notebook](https://github.com/maxgrossenbacher/kaggle_spotify/blob/master/src/Spotify_Time_Series.ipynb) - In this notebook, I forecast the avg. number of streams and the number of streams for the #1 song on Spotify using ARIMA models.
 * [Plotting Script](https://github.com/maxgrossenbacher/Forecasting_daily_spotify_streams/blob/master/src/spotify_timeseries.py) - script for plotting streams of number one song over time. Run [spotify_data_crawler.py](https://github.com/maxgrossenbacher/Forecasting_daily_spotify_streams/blob/master/src/spotify_data_crawler.py) for up to data Spotify streaming data.
 * [Getting Audio Features](https://github.com/maxgrossenbacher/kaggle_spotify/blob/master/src/spotify_data_collection.py) - script for using Spotify API to get audio features of song on Spotify  
 
