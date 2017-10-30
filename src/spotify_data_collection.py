@@ -23,16 +23,12 @@ for i in track_ids:
     url = "https://api.spotify.com/v1/audio-features/"+i
     print(url)
     #calling cURL script
-    audio_features.append(subprocess.check_output(["/Users/gmgtex/Desktop/projects/kaggle_spotify/src/spotify_api_new.sh" , url], universal_newlines=True))
-for t in audio_features:
-    if i not in ids_scraped:
+    output = subprocess.check_output(["/Users/gmgtex/Desktop/projects/Forecasting_spotify_streaming/src/spotify_api_new.sh" , url], universal_newlines=True)
+    if output != '{\n  "error": {\n    "status": 401,\n    "message": "The access token expired"\n  }\n}':
         ids_scraped.append(i)
-        r = t.split(',\n')
+        r = output.split(',\n')
         arr = [k.split(' : ') for k in r]
-        if arr == [['{\n  "error"', '{\n    "status"', '404'],['    "message"', '"analysis not found"\n  }\n}']]:
-            break
-        if dict(arr) not in d:
-            d.append(dict(arr))
+        d.append(dict(arr))
 # creating audio features attributes dataframe from ids in df
 df1 = pd.DataFrame(d)
 #formating and merging columns on track id
