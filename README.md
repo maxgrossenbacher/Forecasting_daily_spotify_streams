@@ -11,7 +11,11 @@ The United States has the most average daily streams on Spotify.
 We can see that number of daily streams are lowest on Sundays and grow gradually throughout the week, peaking on Fridays.
 ![alt_text](images/Avg_Streaming_Jan_2017.png)
 ![alt_text](images/Avg_Streaming_Day_of_Week.png)
-Additionally, if we look at monthly trends we can see that Spotify streams peak in the month of March. This trend may coincide with the fact that in the US, most schools have Spring Break in March, and during Spring Break the demand for music streaming services rises.  
+
+Here we can see the total number of streams of the top song on Spotify for the day and the average number of daily streams on Spotify for the day. Notice the spike in streams in the month of March.  
+![alt_text](avg_streams_v.s_streams_#1_song.png)
+
+Additionally, if we look at monthly trends we can see that Spotify streams peak in the month of March. Upon further analysis, one possible explanation for this spike in streams in March could be the result of a rise in demand for music streaming services during Spring Break which typically falls in the month of March. In March, we see approximately 100,000 stream increase compared to the average daily streams.  
 
 ![alt_text](images/avg_streams_per_month.png)
 
